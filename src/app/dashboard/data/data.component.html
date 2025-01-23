@@ -1,0 +1,89 @@
+<div class="container-fluid">
+  <mat-card class="p-3 mb-4">
+    <h3>Kursübersicht</h3>
+    <div class="table-responsive mt-3">
+      <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Kurs</th>
+            <th>Veranstaltungsort</th>
+            <th>Adresse des Veranstaltungsortes</th>
+            <th>Öffentlich erreichbar?</th>
+            <th>Kursleiter</th>
+            <th>Alle Termine</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of storeService.courses">
+            <td>{{course.name}}</td>
+            <td>{{course.eventLocation?.name}}</td>
+            <td>{{course.eventLocation?.address}}</td>
+            <td>{{course.eventLocation?.venueByPublicTansport ? 'Ja' : 'Nein'}}</td>
+            <td>{{course.instructor}}</td>
+            <td>
+              <ul class="mb-0 ps-3">
+                <li *ngFor="let date of course.dates">
+                  {{ date.begin | date:"MMM dd, yyyy 'um' HH:mm" }} - {{ date.end | date:"MMM dd, yyyy 'um' HH:mm"}}
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </mat-card>
+
+  <mat-card class="p-3">
+    <h3>Registrierungen</h3>
+    <div class="table-responsive mt-3">
+      <table class="table table-striped table-bordered align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Geburtsdatum</th>
+            <th>Kurs</th>
+            <th>Anmeldedatum
+              <button (click)="toggleSort()" class="btn btn-sm btn-outline-secondary ms-2">
+                {{ sortAscending ? '↑' : '↓' }}
+              </button>
+            </th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let registration of storeService.registrations; let i = index">
+            <td>{{ registration.name }}</td>
+            <td>{{ registration.birthdate }}</td>
+            <td>{{ registration.course?.name }}</td>
+            <td>{{ registration.registrationDate | date: 'yyyy-MM-dd' }}</td>
+            <td>
+              <div class="position-relative">
+                <button
+                class="btn btn-danger"
+                (click)="deleteRegistration(+registration.id, i)"
+                [disabled]="loading[i]"
+              >
+                Abmelden
+              </button>
+
+                <div
+                  class="spinner-border text-danger position-absolute top-50 start-50 translate-middle"
+                  *ngIf="loading[i]"
+                ></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-center mt-3">
+      <button class="btn btn-outline-primary me-2"
+        [ngClass]="page == storeService.currentPage ? 'active' : ''"
+        (click)="selectPage(page)"
+        type="button"
+        *ngFor="let page of returnAllPages()">{{page}}
+      </button>
+    </div>
+  </mat-card>
+</div>

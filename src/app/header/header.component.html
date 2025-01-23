@@ -1,0 +1,10 @@
+<mat-toolbar color="primary" class="header-toolbar">
+    <img [src]="imagePath" alt="Logo" class="logo-image">
+    <span>{{ title }}</span>
+    <span style="flex: 1 1 auto;"></span>
+    <button mat-button [matMenuTriggerFor]="menu">Menü</button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item [routerLink]="['/dashboard']">Dashboard</button>
+      <button mat-menu-item [routerLink]="['/about']">About</button>
+    </mat-menu>
+  </mat-toolbar>  
